@@ -11,8 +11,8 @@ int N, M, Q;
 int main() {
   // ios_base::sync_with_stdio(false);
   // cin.tie(NULL);
-  freopen("1.in", "r", stdin);
-  freopen("1.out", "w", stdout);
+  // freopen("1.in", "r", stdin);
+  // freopen("1.out", "w", stdout);
 
   cin >> N >> M >> Q;
 

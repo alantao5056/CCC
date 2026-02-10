@@ -18,6 +18,7 @@ int main() {
 	// a->b through edge c
 	for (int i = 0; i < M; i++) {
 		int a, b, c; cin >> a >> b >> c; a--; b--;
+    if (b < a) swap(a, b);
 		edges[i][0] = a;
 		edges[i][1] = b;
 		edges[i][2] = c;
@@ -26,26 +27,14 @@ int main() {
 		nadj[b].push_back({a, i});
 	}
 
-	vector<vector<int>> eadj(M, vector<int>());
-	for (int i = 0; i < M; i++) {
-		int a = edges[i][0]; int b = edges[i][1];
-
-		for (pii nb : nadj[a]) {
-			if (nb.first == b) continue;
-			eadj[nb.second].push_back(i);
-		}
-		for (pii nb : nadj[b]) {
-			if (nb.first == a) continue;
-			eadj[nb.second].push_back(i);
-		}
-	}
-
 	vector<ll> minD(M, LLONG_MAX/2);
 	priority_queue<pli, vector<pli>, greater<pli>> pq;
-	for (pii nb : nadj[0]) {
-		minD[nb.second] = edges[nb.second][2];
-		pq.push({edges[nb.second][2], nb.second});
-	}
+  for (int i = 0; i < M; i++) {
+    if (edges[i][0] == 0) {
+      minD[i] = edges[i][2];
+      pq.push({edges[i][2], i});
+    }
+  }
 
 	while (!pq.empty()) {
 		ll d = pq.top().first;
@@ -56,11 +45,26 @@ int main() {
 			continue;
 		}
 
-		for (int nb : eadj[cur]) {
-			ll newD = d + abs(edges[cur][2] - edges[nb][2]);
-			if (newD < minD[nb]) {
-				minD[nb] = newD;
-				pq.push({newD, nb});
+    int a = edges[cur][0];
+    int b = edges[cur][1];
+
+    for (pii nb : nadj[a]) {
+      int e = nb.second;
+      if (e == cur) continue;
+			ll newD = d + abs(edges[cur][2] - edges[e][2]);
+			if (newD < minD[e]) {
+				minD[e] = newD;
+				pq.push({newD, e});
+			}
+		}
+
+    for (pii nb : nadj[b]) {
+      int e = nb.second;
+      if (e == cur) continue;
+			ll newD = d + abs(edges[cur][2] - edges[e][2]);
+			if (newD < minD[e]) {
+				minD[e] = newD;
+				pq.push({newD, e});
 			}
 		}
 	}
@@ -75,3 +79,4 @@ int main() {
 
 	return 0;
 }
+
